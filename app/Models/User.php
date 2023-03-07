@@ -2,43 +2,61 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * Class User
+ *
+ * @property $id
+ * @property $category_id
+ * @property $name
+ * @property $lastname
+ * @property $identification
+ * @property $email
+ * @property $country
+ * @property $address
+ * @property $mobile
+ * @property $email_verified_at
+ * @property $password
+ * @property $remember_token
+ * @property $created_at
+ * @property $updated_at
+ *
+ * @property Category $category
+ * @package App
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ */
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
+    
+    static $rules = [
+      'category_id'=> 'required',
+      'name' => 'required|regex:/^[a-zA-Z ]+$/|max:100|min:5',
+      'lastname' => 'required|regex:/^[a-zA-Z ]+$/|max:100',
+      'identification' => 'required|unique:users,identification',
+      'email' => 'required|email|unique:users,email|max:150',
+      'country' => 'required',
+      'address' => 'required|max:180',
+      'mobile' => 'required|numeric|min:10',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $perPage = 20;
 
     /**
-     * The attributes that should be cast.
+     * Attributes that should be mass-assignable.
      *
-     * @var array<string, string>
+     * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $fillable = ['category_id','name','lastname','identification','email','country','address','mobile'];
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function category()
+    {
+        return $this->hasOne('App\Models\Category', 'id', 'category_id');
+    }
+    
+
 }
