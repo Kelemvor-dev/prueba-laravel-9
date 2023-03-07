@@ -28,7 +28,7 @@
         </div>
         <div class="form-group">
             {{ Form::label('País') }}
-            {{ Form::text('country', $user->country, ['class' => 'form-control' . ($errors->has('country') ? ' is-invalid' : ''), 'placeholder' => 'País']) }}
+            {{ Form::select('country', $countries, $user->country, ['class' => 'form-control' . ($errors->has('country') ? ' is-invalid' : ''), 'placeholder' => 'País']) }}
             {!! $errors->first('country', '<div class="invalid-feedback">:message</div>') !!}
         </div>
         <div class="form-group">
